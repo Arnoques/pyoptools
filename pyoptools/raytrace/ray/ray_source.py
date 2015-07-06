@@ -3,8 +3,8 @@
 
 """Module with functions to define ray sources"""
 
-
-from numpy import sin,cos,pi
+from __future__ import division
+from numpy import sin,cos,pi,sqrt,floor,ceil
 from numpy.random import normal
 
 from pyoptools.raytrace.ray import Ray
@@ -212,6 +212,7 @@ def parallel_beam_list(x, y, origin=(0.,0.,0.), direction=(0.,0.,0), wavelength=
     *label*
         String used to identify the ray source
     """
+    from itertools import repeat
     islist_x = hasattr(x, '__len__')
     islist_y = hasattr(y, '__len__')
     if not islist_x and not islist_y:
@@ -250,30 +251,27 @@ def parallel_beam_h(origin=(0.,0.,0.), direction=(0.,0.,0), radius=0.5, num_rays
         String used to identify the ray source
     """
     radius_sq = radius**2
-    area = np.pi*radius_sq/num_rays
-    l = np.sqrt(2/3/np.sqrt(3) * area) * 0.97
-    h = np.sqrt(3)/2*l
-    r3l = radius/3/l
-    r2h = radius/2/h
+    area = pi*radius_sq/num_rays
+    l = sqrt(2./3/sqrt(3) * area) * 0.97
+    h = sqrt(3.)/2*l
+    r3l = radius/3./l
+    r2h = radius/2./h
     ray_list = []
-
-    r1x = xrange(int(np.floor(-r3l)), int(np.ceil(r3l)))
-    r1y = xrange(int(np.floor(-r2h)), int(np.ceil(r2h)))
-    for kx, ky in product(r1x, r1y):
-        x_ = 3 * kx * l
-        y_ = 2 * ky * h
-        if x_**2 + y_**2 <= radius_sq:
-            ray = Ray(pos=(x_,y_,0), dir=(0,0,1), wavelength=wavelength,
-                label=label).ch_coord_sys_inv(origin,direction)
-            ray_list.append(ray)
-    r1 = xrange(int(np.floor(-r3l-0.5)), int(np.ceil(r3l-0.5)))
-    r2 = xrange(int(np.floor(-r2h-0.5)), int(np.ceil(r2h-0.5)))
-    for kx, ky in product(r1, r2):
-        x_ = (3 * kx + 1.5) * l
-        y_ = (2 * ky + 1.0) * h
-        if x_**2 + y_**2 <= radius_sq:
-            ray = Ray(pos=(x_,y_,0), dir=(0,0,1), wavelength=wavelength,
+    for kx in xrange(int(floor(-r3l)), int(ceil(r3l))):
+        for ky in xrange(int(floor(-r2h)), int(ceil(r2h))):
+            x_ = 3 * kx * l
+            y_ = 2 * ky * h
+            if x_**2 + y_**2 <= radius_sq:
+                ray = Ray(pos=(x_,y_,0), dir=(0,0,1), wavelength=wavelength,
                     label=label).ch_coord_sys_inv(origin,direction)
-            ray_list.append(ray)
+                ray_list.append(ray)
+    for kx in xrange(int(floor(-r3l-0.5)), int(ceil(r3l-0.5))):
+        for ky in xrange(int(floor(-r2h-0.5)), int(ceil(r2h-0.5))):
+            x_ = (3 * kx + 1.5) * l
+            y_ = (2 * ky + 1.0) * h
+            if x_**2 + y_**2 <= radius_sq:
+                ray = Ray(pos=(x_,y_,0), dir=(0,0,1), wavelength=wavelength,
+                        label=label).ch_coord_sys_inv(origin,direction)
+                ray_list.append(ray)
     return ray_list
 
