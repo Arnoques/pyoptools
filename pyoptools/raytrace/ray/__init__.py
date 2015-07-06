@@ -4,6 +4,8 @@ from ray_source import *
 
 __all__=["Ray",
          "parallel_beam_c",
+         "parallel_beam_h",
+         "parallel_beam_list",
          "parallel_beam_p",
          "point_source_c",
          "point_source_p",
