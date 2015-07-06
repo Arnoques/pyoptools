@@ -4,10 +4,10 @@
 """
 from pylab import plot, axis,array
 from pyoptools.misc.pmisc import wavelength2RGB
-	    
 
 
-def spot_diagram(s):
+
+def spot_diagram(s, symbol='o'):
     """Plot the spot diagram for the given surface, or element
     """
     hl=s.hit_list
@@ -24,7 +24,7 @@ def spot_diagram(s):
             COL.append(col)
     max=array(X+Y).max
     min=array(X+Y).min
-    plot(X,Y,"o",)
+    plot(X,Y,symbol)
     axis("equal")
 
 def spot_diagram_c(s):
