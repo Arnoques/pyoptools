@@ -16,25 +16,25 @@ from pylab import griddata, meshgrid
 
 #~ class TraitUnitVector(TraitHandler):
     #~ ''' Class to define unit vector trait
-#~ 
+#~
     #~ Description:
-#~ 
+#~
     #~ This class defines a unit vector. If the value assigned is not a unit
     #~ vector, it gets automaticaly normalized
     #~ '''
-#~ 
+#~
     #~ def validate(self, object, name, value):
         #~ try:
-            #~ avalue=array(value)          
+            #~ avalue=array(value)
         #~ except:
             #~ self.error(object, name, value)
-        #~ 
+        #~
         #~ if len(avalue.shape)!=1 or avalue.shape[0]!=3:
             #~ return self.error(object, name, avalue)
-#~ 
-        #~ avalue=array(avalue/sqrt(dot(avalue,avalue))) 
+#~
+        #~ avalue=array(avalue/sqrt(dot(avalue,avalue)))
         #~ return avalue
-#~ 
+#~
 #~ # Trait to define a unit vector based on the unit vector trait
 #~ UnitVector = Trait(array([0,0,1], float_),TraitUnitVector())
 
@@ -67,65 +67,65 @@ def rot_z(tz):
 
 #~ def rot_mat(r):
     #~ '''Returns the transformation matrix for a rotation around the Z,Y,X axes
-    #~ 
+    #~
     #~ The rotation is made first around the Z axis, then around the Y axis, and
     #~ finally around the X axis.
-    #~ 
+    #~
     #~ Parameters
-    #~ 
+    #~
     #~ r= (rx,ry,rz)
     #~ '''
-#~ 
+#~
     #~ c=cos(r)
     #~ s=sin(r)
-#~ 
+#~
     #~ rx=array([[1. , 0., 0.],
                 #~ [0. , c[0],-s[0]],
                 #~ [0. , s[0], c[0]]])
-#~ 
+#~
     #~ ry=array([[ c[1], 0., s[1]],
                 #~ [ 0., 1., 0.],
                 #~ [-s[1], 0., c[1]]])
-#~ 
-#~ 
+#~
+#~
     #~ rz=array([[ c[2],-s[2], 0.],
                 #~ [ s[2], c[2], 0.],
                 #~ [ 0., 0., 1.]])
-#~ 
-#~ 
+#~
+#~
     #~ tm=dot(rz,dot(ry,rx))
-#~ 
+#~
     #~ return tm
 
 #  To improve speed, this routine was moved to cmisc.pyx
 #~ def rot_mat_i(r):
     #~ '''Returns the inverse transformation matrix for a rotation around the Z,Y,X axes
-    #~ 
+    #~
     #~ Parameters
-    #~ 
+    #~
      #~ r= (rx,ry,rz)
      #~ '''
-#~ 
+#~
     #~ c=cos(r)
     #~ s=sin(r)
-#~ 
+#~
     #~ rx=array([[ 1., 0., 0.],
                 #~ [ 0., c[0], s[0]],
                 #~ [ 0.,-s[0], c[0]]])
-#~ 
+#~
     #~ ry=array([[ c[1], 0.,-s[1]],
                 #~ [ 0., 1., 0.],
                 #~ [ s[1], 0., c[1]]])
-#~ 
-#~ 
+#~
+#~
     #~ rz=array([[ c[2], s[2], 0.],
                 #~ [-s[2], c[2], 0.],
                 #~ [ 0., 0., 1.]])
-#~ 
+#~
     #~ # Nota: se hizo una prueba para optimizar escribirndo la expresión del producto
     #~ # escalar, y el resultado fue considerablemente mas lento, toca revisar
-#~ 
-#~ 
+#~
+#~
     #~ return dot(rx,dot(ry,rz))
 
 
@@ -141,12 +141,12 @@ def wavelength2RGB(wl):
     '''Function to aproximate and RGB tuple from the wavelength value
 
     Parameter:
-    
+
     wavelength wavelength in um
 
     if the wavelength is outside the visible spectrum returns (0,0,0)
     Original code fount at:
-    
+
     http://www.physics.sfasu.edu/astro/color/spectra.html
 
     '''
@@ -201,13 +201,13 @@ def matrix_interpolation(M, i, j, type="bilinear"):
     point numbers.
     M
         Matrix to interpolate
-        
-    i,j 
+
+    i,j
         Indices to interpolate
-        
+
     type
         Interpolation type. supported types: nearest,bilinear
-    
+
     """
     mi, mj=M.shape
     if i<0 or i>mi-2 or j<0 or j>mj-2:
@@ -238,9 +238,9 @@ def matrix_interpolation(M, i, j, type="bilinear"):
         #return p1+ p2+ p3+ p4
     print "error"
     return 1.
-    
+
 def hitlist2int(x, y, z,  xi, yi):
-    """Function that estimates an intensity distribution on a plane from a 
+    """Function that estimates an intensity distribution on a plane from a
     ray hitlist
     """
     import matplotlib.delaunay as delaunay
@@ -257,18 +257,18 @@ def hitlist2int(x, y, z,  xi, yi):
     #    x = x.compress(z.mask == False)
     #    y = y.compress(z.mask == False)
     #    z = z.compressed()
-    
+
     #if xi.ndim == 1:
     #    xi,yi = meshgrid(xi,yi)
-    
+
     #triangulate data
-    
+
     tri=delaunay.Triangulation(x, y)
-    
+
     #calculate triangles area
     ntriangles=tri.circumcenters.shape[0]
     coord=array(zip(tri.x, tri.y))
-   
+
     #I=zeros((ntriangles, ))
     #xc=zeros((ntriangles, ))
     #yc=zeros((ntriangles, ))
@@ -291,17 +291,17 @@ def hitlist2int(x, y, z,  xi, yi):
     p1=coord[i1]
     p2=coord[i2]
     p3=coord[i3]
-    
+
     v1=p1-p2
     v2=p3-p2
     I=abs(1./(v1[:, 0]*v2[:, 1]-v1[:, 1]*v2[:, 0]))
-    
+
     c=(p1+p2+p3)/3.
     xc=c[:, 0]
     yc=c[:, 1]
     ###
-    
-    # Because of the triangulation algorithm, there are some really high values 
+
+    # Because of the triangulation algorithm, there are some really high values
     # in the intensity data. To filter these values, remove the 5% points of the
     # higher intensity.
     ni=int(0.1*len(I))
@@ -310,33 +310,33 @@ def hitlist2int(x, y, z,  xi, yi):
     yc=yc[j]
     I=I[j]
     I=I/I.max()
-    
+
 #    #print tri.circumcenters[:, 0]
 #    #print tri.circumcenters.shape
 #    print ntriangles,  tri.circumcenters[:, 0].shape,  tri.circumcenters[:, 0].flatten().shape
-    
+
     #itri=delaunay.Triangulation(xc,yc)
     #inti=itri.linear_interpolator(I)
     #xi,yi = meshgrid(xi,yi)
     #d1=itri(xi, yi)
-    
+
     #Interpolacion con Splines
     #di=interpolate.SmoothBivariateSpline(xc, yc, I)
     #d1=di(xi,yi)
-    
+
     #Interpolacion nn, y generación de pupila
     xi,yi = meshgrid(xi,yi)
     d1=griddata(xc, yc, I,xi, yi )
     return d1
 
 def hitlist2int_list(x, y):
-    """Function that estimates an intensity distribution on a plane from a 
+    """Function that estimates an intensity distribution on a plane from a
     ray hitlist. Returns the intensity samples as an x,y,I list
     """
     import matplotlib.delaunay as delaunay
     from pylab import griddata, meshgrid
     from scipy import interpolate
-    
+
     #if xi.ndim != yi.ndim:
     #    raise TypeError("inputs xi and yi must have same number of dimensions (1 or 2)")
     #if xi.ndim != 1 and xi.ndim != 2:
@@ -348,18 +348,18 @@ def hitlist2int_list(x, y):
     #    x = x.compress(z.mask == False)
     #    y = y.compress(z.mask == False)
     #    z = z.compressed()
-    
+
     #if xi.ndim == 1:
     #    xi,yi = meshgrid(xi,yi)
-    
+
     #triangulate data
-    
+
     tri=delaunay.Triangulation(x, y)
-    
+
     #calculate triangles area
     ntriangles=tri.circumcenters.shape[0]
     coord=array(zip(tri.x, tri.y))
-   
+
     #I=zeros((ntriangles, ))
     #xc=zeros((ntriangles, ))
     #yc=zeros((ntriangles, ))
@@ -382,17 +382,17 @@ def hitlist2int_list(x, y):
     p1=coord[i1]
     p2=coord[i2]
     p3=coord[i3]
-    
+
     v1=p1-p2
     v2=p3-p2
     I=abs(1./(v1[:, 0]*v2[:, 1]-v1[:, 1]*v2[:, 0]))
-    
+
     c=(p1+p2+p3)/3.
     xc=c[:, 0]
     yc=c[:, 1]
     ###
-    
-    # Because of the triangulation algorithm, there are some really high values 
+
+    # Because of the triangulation algorithm, there are some really high values
     # in the intensity data. To filter these values, remove the 5% points of the
     # higher intensity.
     ni=int(0.1*len(I))
@@ -401,35 +401,35 @@ def hitlist2int_list(x, y):
     yc=yc[j]
     I=I[j]
     I=I/I.max()
-    
+
 #    #print tri.circumcenters[:, 0]
 #    #print tri.circumcenters.shape
 #    print ntriangles,  tri.circumcenters[:, 0].shape,  tri.circumcenters[:, 0].flatten().shape
-    
+
     #itri=delaunay.Triangulation(xc,yc)
     #inti=itri.linear_interpolator(I)
     #xi,yi = meshgrid(xi,yi)
     #d1=itri(xi, yi)
-    
+
     #Interpolacion con Splines
     #di=interpolate.SmoothBivariateSpline(xc, yc, I)
     #d1=di(xi,yi)
-    
+
     return xc,yc,I
-    
+
 
 def unwrapv(inph,in_p=(), uv=2*pi):
     """Return the input matrix unwraped the value given in uv
-    
+
     This is a vectorized routine, but is not as fast as it should
     """
-    
+
     if not is_masked(inph):
         fasei=MaskedArray(inph, isnan(inph))
     else:
         fasei=inph.copy()
-        
-    
+
+
     size=fasei.shape
     nx, ny=size
     # If the initial unwraping point is not given, take the center of the image
@@ -439,7 +439,7 @@ def unwrapv(inph,in_p=(), uv=2*pi):
 
     # Create a temporal space to mark if the points are already unwrapped
     # 0 the point has not been unwrapped
-    # 1 the point has not been unwrapped, but it is in the unwrapping list 
+    # 1 the point has not been unwrapped, but it is in the unwrapping list
     # 2 the point was already unwrapped
 
     fl=N.zeros(size)
@@ -466,15 +466,15 @@ def unwrapv(inph,in_p=(), uv=2*pi):
         nyf=YI<ny
         n=nonzero(nxi& nyi & nxf & nyf)
         lco=zip(XI[n], YI[n])
-        
+
         # Put the coordinates of unwrapped the neigbors in the list
-        
-        
+
+
         # And check for wrapping
         nv=0
-        wv=0    
-        
-        
+        wv=0
+
+
         for co in lco:
             if (fl[co]==0) & (faseo.mask[co]==False):
                 fl[co]=1
@@ -482,29 +482,29 @@ def unwrapv(inph,in_p=(), uv=2*pi):
             elif fl[co]==2:
                 wv=wv+rint((faseo[co]-faseo[unp])/uv)
                 nv=nv+1
-    
-        if nv!=0: 
+
+        if nv!=0:
             wv=wv/nv
             #if wv>=0: wv=int(wv+0.5)
             #else: wv=int(wv-0.5)
         fl[unp]=2
         faseo[unp]=faseo[unp]+wv*uv
-    
+
     return faseo
 
 
 def unwrap_py(inph,in_p=(), uv=2*pi):
     """Return the input matrix unwraped the valu given in uv
-    
+
     The same as unwrapv, but using for-s, written in python
     """
     if not is_masked(inph):
         fasei=MaskedArray(inph, isnan(inph))
     else:
         fasei=inph
-        
-    nx, ny=(fasei.shape[0],fasei.shape[1]) 
-    
+
+    nx, ny=(fasei.shape[0],fasei.shape[1])
+
     # If the initial unwraping point is not given, take the center of the image
     # as initial coordinate
     if in_p==():
@@ -512,7 +512,7 @@ def unwrap_py(inph,in_p=(), uv=2*pi):
 
     # Create a temporal space to mark if the points are already unwrapped
     # 0 the point has not been unwrapped
-    # 1 the point has not been unwrapped, but it is in the unwrapping list 
+    # 1 the point has not been unwrapped, but it is in the unwrapping list
     # 2 the point was already unwrapped
 
     fl=zeros((nx, ny))
@@ -522,17 +522,17 @@ def unwrap_py(inph,in_p=(), uv=2*pi):
     fl[in_p]=1
 
     # unwrapped values
-    faseo=fasei.copy()    
-    
+    faseo=fasei.copy()
+
     while len(l_un)>0:
         # remove the first value from the list
         cx, cy=l_un.pop(0)
-    
+
         # Put the coordinates of unwrapped the neigbors in the list
         # And check for wrapping
         nv=0
-        wv=0    
-        
+        wv=0
+
         for i in range(cx-1, cx+2):
             for j in range(cy-1, cy+2):
                 if (i>-1) and (i<nx) and (j>-1) and (j<ny):
@@ -541,61 +541,61 @@ def unwrap_py(inph,in_p=(), uv=2*pi):
                         l_un.append((i, j))
                     elif fl[i, j]==2:
                         wv=wv+rint((faseo[i, j]-faseo[cx, cy])/uv)
-                        nv=nv+1        
-        if nv!=0: 
+                        nv=nv+1
+        if nv!=0:
             wv=wv/nv
 
         fl[cx, cy]=2
         faseo[cx, cy]=faseo[cx, cy]+wv*uv
-        
+
     return faseo
 
 
-    
+
 def interpolate_g(xi,yi,zi,xx,yy,knots=10, error=False,mask=None):
     """Create a grid of zi values interpolating the values from xi,yi,zi
-    
+
     xi,yi,zi  1D Lists  or arrays containing the values to use as base for the interpolation
     xx,yy     1D vectors or lists containing the output coordinates
     samples  tuple containing the shape of the output array.
     knots     number of knots to be used in each direction
-    error     if set to true, half of the points (x, y, z) are used to create 
+    error     if set to true, half of the points (x, y, z) are used to create
               the interpolation, and half are used to evaluate the interpolation error
-    
-    
+
+
     """
     xi=array(xi)
     yi=array(yi)
     zi=array(zi)
-    
+
     #print xi
     #print yi
     #print zi
-    assert xi.ndim==1 ,"xi must ba a 1D array or list" 
-    assert yi.ndim==1 ,"yi must ba a 1D array or list" 
-    assert zi.ndim==1 ,"zi must ba a 1D array or list" 
-    
-    assert xx.ndim==1 ,"xx must ba a 1D array or list" 
-    assert yy.ndim==1 ,"yy must ba a 1D array or list" 
-    
+    assert xi.ndim==1 ,"xi must ba a 1D array or list"
+    assert yi.ndim==1 ,"yi must ba a 1D array or list"
+    assert zi.ndim==1 ,"zi must ba a 1D array or list"
+
+    assert xx.ndim==1 ,"xx must ba a 1D array or list"
+    assert yy.ndim==1 ,"yy must ba a 1D array or list"
+
     assert len(xi)==len(yi) and len(xi)==len(zi), "xi, yi, zi must have the same number of items"
-    
-    
-    
+
+
+
     if error==True:
-        # Create a list of indexes to be able to select the points that are going 
+        # Create a list of indexes to be able to select the points that are going
         # to be used as spline generators, and as control points
         idx=where(arange(len(xi)) %2 ==0, False, True)
 
-   # Use only half of the samples to create the Spline, 
+   # Use only half of the samples to create the Spline,
     if error == True:
         isp=argwhere(idx==True)
         ich=argwhere(idx==False)
-        
+
         xsp=xi[isp]
         ysp=yi[isp]
         zsp=zi[isp]
-        
+
         xch=xi[ich]
         ych=yi[ich]
         zch=zi[ich]
@@ -603,17 +603,17 @@ def interpolate_g(xi,yi,zi,xx,yy,knots=10, error=False,mask=None):
         xsp=xi
         ysp=yi
         zsp=zi
-    
+
     #Distribute homogeneously the knots
     xk=linspace(xsp.min(), xsp.max(),knots)
     yk=linspace(ysp.min(), ysp.max(),knots)
-    
-    # LSQBivariateSpline using some knots gives smaller error than 
+
+    # LSQBivariateSpline using some knots gives smaller error than
     # SmoothBivariateSpline
     di=interpolate.LSQBivariateSpline(xsp, ysp, zsp, xk[1:-1],  yk[1:-1])
     #print xsp,ysp,zsp
     #di=interpolate.SmoothBivariateSpline(xsp, ysp, zsp)
-        
+
     # Evaluate error
     if error==True:
         zch1=di.ev(xch, ych)
@@ -624,7 +624,7 @@ def interpolate_g(xi,yi,zi,xx,yy,knots=10, error=False,mask=None):
         d=di(xx,yy).transpose()
     else:
         d=ma_array(di(xx,yy).transpose(), mask=mask)
-    
+
     if error==True: return d, er
     else: return d
 
@@ -632,22 +632,23 @@ def interpolate_g(xi,yi,zi,xx,yy,knots=10, error=False,mask=None):
 
 
 def spot_info(C):
-    """Retorna una tupla con el radio promedio y el centro de masa
-    de los rayos que impactaron el CCD C"""
-    X=[]
-    Y=[]
-    for hl in C.hit_list:
-        x,y,z=hl[0]
-        X.append(x)
-        Y.append(y)
+    """Returns the mean radius, RMS radius, centroid, X and Y mean deviation,
+    and maximum radius of all rays in a detector hit list"""
+    hit_points = (hit[0] for hit in C.hit_list)
+    positions = [(x, y) for x,y,z in hit_points]
+    X, Y = zip(*positions)
     xm=mean(X)
     ym=mean(Y)
-    X=array(X)-xm
-    Y=array(Y)-ym
-    R=sqrt(X**2+Y**2)
-    XR=sqrt(X**2)
-    YR=sqrt(Y**2)
-    return mean(R),(xm,ym),(mean(XR),mean(YR)),R.max()
+    XR = abs(array(X) - xm)
+    YR = abs(array(Y) - ym)
+    Rsq = XR**2 + YR**2
+    R = sqrt(Rsq)
+    Rmax = R.max()
+    Rmean = mean(R)
+    Rrms = sqrt(mean(Rsq))
+    centroid = (xm, ym)
+    deviation = (mean(XR), mean(YR))
+    return Rmean, Rrms, centroid, deviation, Rmax
 
 ####### Fin Funciones auxiliares
 
